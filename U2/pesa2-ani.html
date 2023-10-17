@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamische Rasterung</title>
+
+    <script type="text/javascript">
+        window.addEventListener('load', canvasApp, false);
+
+        function canvasApp() {
+            if (!document.createElement('canvas').getContext) {
+                return;
+            }
+
+            var theCanvas = document.getElementById('canvas');
+            var context = theCanvas.getContext('2d');
+
+            var image = new Image();
+            image.addEventListener('load', onImageLoaded);
+            image.src = 'monster.png';
+
+            // Sprites pro Zeile
+            var columns = 10;
+            // 1 Reihe
+            var rows = 1;
+            // Anzahl pro Sequenz
+            var numFrames = columns * rows;
+
+            // Raster Initialwert
+            rasterSize = 0;
+
+            var imgWidth;
+            var imgHeight;
+
+            var frameID = 0;
+            var rasteredCanvas = document.createElement('canvas'); // Neues Canvas für das gerasterte Bild
+            var rasteredContext = rasteredCanvas.getContext('2d');
+
+            // Event Listener für Änderungen der Gitterdichte hinzufügen
+            var sizeInput = document.getElementById("sizeInput");
+            sizeInput.addEventListener("change", onGridChange);
+
+            function onImageLoaded(e) {
+                imgWidth = image.width / numFrames;
+                imgHeight = image.height;
+                montserLoop();
+            }
+
+            function drawCanvas() {
+                context.clearRect(0, 0, theCanvas.width, theCanvas.height);
+
+                // x pos
+                var xPos = (frameID % columns) * imgWidth;
+                // y pos
+                var yPos = Math.floor(frameID / columns) * imgHeight;
+
+                if (rasterSize === 0) {
+                    // Wenn rasterSize 0 ist, zeichne das Originalbild direkt auf dem Haupt-Canvas
+                    context.drawImage(image, xPos, yPos, imgWidth, imgHeight, 0, 0, imgWidth, imgHeight);
+                } else {
+
+                    // Zeichne das Originalbild auf das Zwischenspeicher-Canvas
+                    rasteredCanvas.width = imgWidth;
+                    rasteredCanvas.height = imgHeight;
+                    rasteredContext.drawImage(image, xPos, yPos, imgWidth, imgHeight, 0, 0, imgWidth, imgHeight);
+
+                    // Raster anwenden
+                    var imgData = rasteredContext.getImageData(0, 0, imgWidth, imgHeight);
+
+                    // Row and Column durchlaufen für x und y pixel
+                    for (var x = 0; x < imgData.width; x++) {
+                        for (var y = 0; y < imgData.height; y++) {
+
+                            var rasterX = ((x / rasterSize) | 0) * rasterSize;
+                            var rasterY = ((y / rasterSize) | 0) * rasterSize;
+
+                            var rasterValIndex = (rasterX + rasterY * imgData.width) * 4;
+
+                            r = imgData.data[rasterValIndex];
+                            g = imgData.data[rasterValIndex + 1];
+                            b = imgData.data[rasterValIndex + 2];
+                            a = imgData.data[rasterValIndex + 3];
+
+                            // Pixel setzen in x, y
+                            context.fillStyle = "rgba(" + r + "," + g + "," + b + "," + a + ")";
+                            context.fillRect(x - rasterSize, y - rasterSize, rasterSize, rasterSize);
+
+                        }
+                    }
+                }
+
+                frameID++;
+                if (frameID == numFrames) {
+                    frameID = 0;
+                }
+            }
+
+            // Loop
+            function montserLoop() {
+                window.setTimeout(montserLoop, 100);
+                drawCanvas();
+            }
+
+            // Wert der Gittergröße aus HTML ermitteln
+            function onGridChange(e) {
+                var newSize = e.target.value;
+                if (newSize == 0) {
+                    // Wenn newSize gleich 0 ist, zeichne das Originalbild direkt auf dem Haupt-Canvas
+                    rasterSize = 0;
+                    drawCanvas();
+                } else {
+                    rasterSize = newSize;
+                    drawCanvas();
+                }
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvas" width="190" height="260" style="border: 2px solid rgb(205, 219, 255); padding: 20px;">
+            Your browser does not support the HTML 5 Canvas.
+        </canvas>
+        <form style="margin: 10px 0 10px 10px">
+
+            Gitterdichte: <input type="range" id="sizeInput" min="0" max="30" step="1" value="0" />
+
+        </form>
+    </div>
+</body>
+
+</html>

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>sprite Rasterung</title>
+    <title>Dynamische Rasterung</title>
 
     <script type="text/javascript">
         window.addEventListener('load', canvasApp, false);
@@ -44,7 +44,7 @@
             function onImageLoaded(e) {
                 imgWidth = image.width / numFrames;
                 imgHeight = image.height;
-                montserLoop();
+                monstserLoop();
             }
 
             function drawCanvas() {
@@ -82,12 +82,15 @@
                             b = imgData.data[rasterValIndex + 2];
                             a = imgData.data[rasterValIndex + 3];
 
-                            // Pixel setzen in x, y
-                            context.fillStyle = "rgba(" + r + "," + g + "," + b + "," + a + ")";
-                            context.fillRect(x - rasterSize, y - rasterSize, rasterSize, rasterSize);
+                            var currentPix = (x + y * imgData.width) * 4;
 
+                            imgData.data[currentPix] = r;
+                            imgData.data[currentPix + 1] = g;
+                            imgData.data[currentPix + 2] = b;
+                            imgData.data[currentPix + 3] = a;
                         }
                     }
+                    context.putImageData(imgData, 0, 0)
                 }
 
                 frameID++;
@@ -97,8 +100,8 @@
             }
 
             // Loop
-            function montserLoop() {
-                window.setTimeout(montserLoop, 100);
+            function monstserLoop() {
+                window.setTimeout(monstserLoop, 70);
                 drawCanvas();
             }
 
@@ -120,16 +123,16 @@
 </head>
 
 <body>
-    <div style="position: absolute; top: 50px; left: 50px;">
-        <canvas id="canvas" width="190" height="260" style="border: 2px solid rgb(205, 219, 255); padding: 20px;">
-            Your browser does not support the HTML 5 Canvas.
-        </canvas>
-        <form style="margin: 10px 0 10px 10px">
+<div style="position: absolute; top: 50px; left: 50px;">
+    <canvas id="canvas" width="190" height="260" style="border: 2px solid rgb(205, 219, 255); padding: 20px;">
+        Your browser does not support the HTML 5 Canvas.
+    </canvas>
+    <form style="margin: 10px 0 10px 10px">
 
-            Gitterdichte: <input type="range" id="sizeInput" min="0" max="30" step="1" value="0" />
+        Gitterdichte: <input type="range" id="sizeInput" min="0" max="30" step="1" value="0" />
 
-        </form>
-    </div>
+    </form>
+</div>
 </body>
 
 </html>

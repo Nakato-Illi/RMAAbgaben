@@ -1,10 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>Dynamische Rasterung</title>
-
+    <title>Pixelmanipulation</title>
     <script type="text/javascript">
         window.addEventListener('load', canvasApp, false);
 
@@ -18,31 +16,33 @@
             var image = new Image();
             image.addEventListener('load', onImageLoaded);
             image.src = 'colored.jpg';
-
             var imgWidth;
             var imgHeight;
+
 
             // Raster Initialwert
             var rasterSize = 1;
 
-            //Event Listener für Änderungen der Gitterdichte hinzufügen
-            document.getElementById("sizeInput").addEventListener("change", onGridChange);
+            //Event Listener für Änderungen der Rastergröße
+            document.getElementById("sizeInput").addEventListener("change", onSizeChange);
 
-            function onImageLoaded(e) {
+            function onImageLoaded() {
                 imgWidth = image.width;
                 imgHeight = image.height;
                 drawCanvas();
             }
 
+
             function drawCanvas() {
-                //Bild in Position 0, 0 rendern
+
+                // Bild in Position 0, 0 rendern
                 context.drawImage(image, 0, 0);
 
-                // raster anwenden
-                var imgData = context.getImageData(0, 0, imgWidth, imgHeight);
+                var imgData = context.getImageData(0, 0, imgWidth, imgHeight)
 
-                // Row and Column durchlaufen für x und y pixel
+                // durchlaufe alle Reihen des Bildes
                 for (var x = 0; x < imgData.width; x++) {
+                    // durchlaufe alle Spalten des Bildes
                     for (var y = 0; y < imgData.height; y++) {
 
                         var rasterX = ((x / rasterSize) | 0) * rasterSize;
@@ -50,40 +50,44 @@
 
                         var rasterValIndex = (rasterX + rasterY * imgData.width) * 4;
 
+                        // r,g,b,a eines Pixel ermitteln
                         r = imgData.data[rasterValIndex];
                         g = imgData.data[rasterValIndex + 1];
                         b = imgData.data[rasterValIndex + 2];
                         a = imgData.data[rasterValIndex + 3];
 
-                        //Pixel setzen in x, y
-                        context.fillStyle = "rgba(" + r + "," + g + "," + b + "," + a + ")";
-                        context.fillRect(x - rasterSize, y - rasterSize, rasterSize, rasterSize);
+                        // Position des aktuellen Pixel ermitteln
+                        var currentPixelIndex = (x + y * imgData.width) * 4;
+
+                        // r,g,b,a des aktuellen Pixel neu setzen
+                        imgData.data[currentPixelIndex] = r;
+                        imgData.data[currentPixelIndex + 1] = g;
+                        imgData.data[currentPixelIndex + 2] = b;
+                        imgData.data[currentPixelIndex + 3] = a;
+
+
                     }
                 }
+                context.putImageData(imgData, 0, 0);
             }
 
             // Wert der Gittergöße aus HTML ermitteln
-            function onGridChange(e) {
+            function onSizeChange(e) {
                 rasterSize = e.target.value;
                 drawCanvas();
             }
-
         }
-
     </script>
 </head>
 
 <body>
-    <div style="position: absolute; top: 50px; left: 50px;">
-        <canvas id="canvas" width="615" height="410">
-            Your browser does not support the HTML 5 Canvas.
-        </canvas>
-        <form style="margin: 10px 0 10px 10px">
-
-            Gitterdichte: <input type="range" id="sizeInput" min="0" max="100" step="1" value="5" />
-
-        </form>
-    </div>
+<div style="position: absolute; top: 50px; left: 50px">
+    <canvas id="canvas" width="615" height="410">
+        Your browser does not support the HTML 5 Canvas.
+    </canvas>
+    <form style="margin: 10px 100px 0 0">
+        <label for="sizeInput">Gittergröße: </label><input type="range" id="sizeInput" min="1" max="20" step="1" value="0"/>
+    </form>
+</div>
 </body>
-
 </html>

@@ -17,7 +17,7 @@ jQuery(document).ready(function ($) {
 
     /*-------------------TO-DO Item Interactivity / Event Handler-----------------------------*/
     /*Edit Arrow Button -> Open Menu Bar*/
-    $('ul.todo-list li .arrow-btn').on('click', function () {
+    $('ul.todo-list li .arrow-btn').on('click', function (a,b,c,d) {
         onArrowClick($(this).closest('li'));
     });
 
@@ -25,6 +25,7 @@ jQuery(document).ready(function ($) {
         $('ul.todo-list > li').each(function (i) {
             if ($(this).is($clickItem) || $(this).hasClass('edit-open')) {
                 toggleMenuItemBarOpen($(this));
+                // toggleMenuItemBarOpen($clickItem);
             }
         });
     }
@@ -199,7 +200,7 @@ jQuery(document).ready(function ($) {
         $newListItem.find('input[type="text"]').pressEnter(unEditModeItem);
         // menu anzeigen
         $newListItem.find('.arrow-btn').on('click', function () {
-            onArrowClick($newListItem);
+            onArrowClick(this.parentNode);
         });
         // to do list element Löschen
         $newListItem.find('.remove-btn').on('click', function () {

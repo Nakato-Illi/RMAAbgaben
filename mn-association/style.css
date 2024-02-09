@@ -108,7 +108,7 @@ nav ul {
 
 #backButton {
     position: absolute;
-    top: -40px;
+    top: -42px;
     left: 10px;
     /*background-color: #333333;*/
 }
@@ -116,17 +116,17 @@ nav ul {
 .we-own {
     background-color: greenyellow;
     position: absolute;
-    top: -50px;
+    top: -42px;
     left: 150px;
-    padding: 10px;
+    padding: 5px;
 }
 
 .we-want {
     background-color: orange;
     position: absolute;
-    top: -50px;
+    top: -40px;
     left: 230px;
-    padding: 10px;
+    padding: 5px;
 }
 
 .world-map {
@@ -170,45 +170,45 @@ nav ul {
 }
 
 .n-america {
-    height: 50px;
-    width: 80px;
-    left: 370px;
-    top: 130px;
+    height: 30px;
+    width: 120px;
+    left: 330px;
+    top: -40px;
 }
 
 .s-america {
-    height: 50px;
-    width: 80px;
-    left: 530px;
-    top: 340px;
+    height: 30px;
+    width: 120px;
+    left: 460px;
+    top: -40px;
 }
 
 .africa {
     height: 30px;
     width: 80px;
-    left: 780px;
-    top: 260px;
+    left: 590px;
+    top: -40px;
 }
 
 .asia {
     height: 30px;
     width: 80px;
-    right: 420px;
-    top: 150px;
+    left: 680px;
+    top: -40px;
 }
 
 .europe {
     height: 30px;
     width: 80px;
-    left: 790px;
-    top: 100px;
+    left: 770px;
+    top: -40px;
 }
 
 .australia {
     height: 30px;
     width: 80px;
-    right: 250px;
-    top: 400px;
+    left: 860px;
+    top: -40px;
 }
 
 .search-bar {

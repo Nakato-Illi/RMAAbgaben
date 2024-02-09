@@ -262,13 +262,13 @@ nav ul {
 }
 
 .team-section {
-    padding: 50px 20px;
+    padding: 10px 20px;
     text-align: center;
 }
 
 .team-box {
-    max-width: 300px;
-    margin: 40px 60px;
+    max-width: 200px;
+    margin: 20px 60px;
 }
 
 .team-img {
